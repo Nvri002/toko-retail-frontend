@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    font-feature-settings: "ss03";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'Inter', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 420;
+    line-height: 1.5;
+    background-color: #fbfbf5;
+    color: #000000;
+    margin: 0;
+  }
+
+  ::-webkit-scrollbar       { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
+}
+
+@layer components {
+  /* ── Buttons ── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-xl py-md
+           bg-ink text-white font-body text-body-md font-medium
+           rounded-pill border-none cursor-pointer transition-colors duration-150
+           hover:bg-shade-70 active:bg-shade-70 disabled:opacity-40 disabled:cursor-not-allowed
+           select-none;
+  }
+
+  .btn-outline-light {
+    @apply inline-flex items-center justify-center gap-2 px-xl py-md
+           bg-canvas-light text-ink font-body text-body-md font-medium
+           rounded-pill border border-ink cursor-pointer transition-colors duration-150
+           hover:bg-shade-30/30 active:bg-shade-30/50 disabled:opacity-40 disabled:cursor-not-allowed
+           select-none;
+  }
+
+  .btn-outline-dark {
+    @apply inline-flex items-center justify-center gap-2 px-xl py-md
+           bg-transparent text-white font-body text-body-md font-medium
+           rounded-pill border-2 border-white cursor-pointer transition-colors duration-150
+           hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed
+           select-none;
+  }
+
+  .btn-aloe {
+    @apply inline-flex items-center justify-center gap-2 px-xl py-md
+           bg-aloe-10 text-ink font-body text-body-md font-medium
+           rounded-pill border-none cursor-pointer transition-colors duration-150
+           hover:brightness-95 disabled:opacity-40 disabled:cursor-not-allowed
+           select-none;
+  }
+
+  .btn-sm {
+    @apply px-md py-xs text-caption;
+  }
+
+  /* ── Cards ── */
+  .card {
+    @apply bg-canvas-light rounded-lg border border-hairline-light shadow-elev-3 p-xxl;
+  }
+
+  .card-dark {
+    @apply bg-canvas-night-elevated rounded-lg shadow-elev-1 p-xxl text-white;
+  }
+
+  .card-aloe {
+    @apply bg-aloe-10 rounded-lg border border-hairline-light p-xxl;
+  }
+
+  .card-pistachio {
+    @apply bg-pistachio-10 rounded-lg p-xxl;
+  }
+
+  /* ── Form Inputs ── */
+  .input {
+    @apply w-full bg-canvas-light text-ink font-body text-body-md
+           px-md py-[10px] rounded-md border border-hairline-light
+           outline-none transition-all duration-150
+           focus:border-ink focus:ring-2 focus:ring-ink/10
+           placeholder:text-shade-40
+           disabled:bg-shade-30/30 disabled:cursor-not-allowed;
+  }
+
+  .input-error {
+    @apply border-red-400 focus:border-red-500 focus:ring-red-500/10;
+  }
+
+  .label {
+    @apply block font-body text-eyebrow font-medium tracking-widest
+           text-shade-60 uppercase mb-xs;
+  }
+
+  /* ── Pills / Tags ── */
+  .pill-mint {
+    @apply inline-flex items-center px-md py-xs
+           bg-aloe-10 text-ink font-body text-eyebrow font-medium
+           tracking-widest uppercase rounded-pill;
+  }
+
+  .pill-shade {
+    @apply inline-flex items-center px-md py-xs
+           bg-shade-30 text-ink font-body text-eyebrow font-medium
+           tracking-widest uppercase rounded-pill;
+  }
+
+  .pill-status {
+    @apply inline-flex items-center px-md py-xs
+           font-body text-micro font-medium rounded-pill;
+  }
+
+  /* ── Table ── */
+  .table-wrap { @apply overflow-x-auto; }
+  table       { @apply w-full border-collapse; }
+  thead tr    { @apply border-b border-hairline-light; }
+  th          { @apply px-lg py-sm text-left font-body text-eyebrow font-medium
+                       tracking-widest uppercase text-shade-50; }
+  td          { @apply px-lg py-md font-body text-body-md text-ink
+                       border-b border-hairline-light/60; }
+  tbody tr    { @apply transition-colors duration-100 hover:bg-shade-30/20; }
+  tbody tr:last-child td { @apply border-b-0; }
+}
