@@ -112,12 +112,12 @@
       <!-- Penjualan per Kategori -->
       <div class="card">
         <p class="font-display font-semibold text-ink mb-xl" style="font-size:15px;">Penjualan per Kategori</p>
-        <div v-if="!salesKat.length" class="text-center py-xl text-shade-40 text-caption">Belum ada data.</div>
+        <div v-if="!salesKatFiltered.length" class="text-center py-xl text-shade-40 text-caption">Belum ada data penjualan.</div>
         <div class="flex flex-col gap-md">
-          <div v-for="k in salesKat" :key="k.nama_kategori || k.nama"
+          <div v-for="k in salesKatFiltered" :key="k.id || k.kategori"
                class="grid items-center gap-lg"
                style="grid-template-columns:140px 1fr 160px;">
-            <p class="font-body text-shade-50 text-right truncate" style="font-size:13px;">{{ k.nama_kategori || k.nama }}</p>
+            <p class="font-body text-shade-50 text-right truncate" style="font-size:13px;">{{ k.kategori || k.nama_kategori || k.nama }}</p>
             <div class="h-2 rounded-pill overflow-hidden bg-hairline-light">
               <div class="h-full rounded-pill bg-ink transition-all duration-1000"
                    :style="{ width: barW(k.total_pendapatan || k.total) + '%' }"></div>
@@ -152,6 +152,11 @@ const statusList = [
 
 const maxSales = computed(() => Math.max(...salesKat.value.map(k => Number(k.total_pendapatan || k.total || 0)), 1))
 function barW(v) { return ((Number(v) / maxSales.value) * 100).toFixed(1) }
+
+// Hanya tampilkan kategori yang sudah ada penjualannya
+const salesKatFiltered = computed(() =>
+  salesKat.value.filter(k => Number(k.total_pendapatan || k.total || 0) > 0)
+)
 
 function rupiah(n) {
   if (n === null || n === undefined) return '—'

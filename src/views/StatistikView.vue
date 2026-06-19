@@ -46,11 +46,10 @@
           <p class="font-display font-semibold text-ink mb-xl" style="font-size:15px;">
             Tren Penjualan Bulanan {{ tahunDipilih }}
           </p>
-          <div v-if="!bulanan.length" class="text-center py-xxl text-shade-40 text-caption">
-            Belum ada data penjualan untuk tahun {{ tahunDipilih }}.
+          <div v-if="totalPesanan === 0" class="text-center text-shade-40 text-caption mb-md">
+            Belum ada transaksi untuk tahun {{ tahunDipilih }}.
           </div>
-          <template v-else>
-            <svg :viewBox="`0 0 ${W} ${H}`" width="100%" style="overflow:visible;display:block;">
+          <svg :viewBox="`0 0 ${W} ${H}`" width="100%" style="overflow:visible;display:block;">
               <defs>
                 <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%"   stop-color="#000" stop-opacity="0.12"/>
@@ -71,14 +70,14 @@
               <path :d="linePath" fill="none" stroke="#000" stroke-width="2.5"
                     stroke-linecap="round" stroke-linejoin="round"/>
               <g v-for="(pt,i) in pts" :key="'p'+i">
-                <circle :cx="pt.x" :cy="pt.y" r="5" fill="#000" stroke="#fbfbf5" stroke-width="2"/>
+                <circle v-if="pt.hasData" :cx="pt.x" :cy="pt.y" r="5" fill="#000" stroke="#fbfbf5" stroke-width="2"/>
+                <circle v-else :cx="pt.x" :cy="pt.y" r="3" fill="#e4e4e7"/>
                 <text :x="pt.x" :y="H-PB+16" fill="#a1a1aa" font-size="10"
                       text-anchor="middle" font-family="Inter, sans-serif">
-                  {{ shortMonth(bulanan[i].bulan) }}
+                  {{ shortMonth(fullYearData[i].bulan) }}
                 </text>
               </g>
             </svg>
-          </template>
         </div>
 
         <!-- Produk Terlaris -->
@@ -240,19 +239,30 @@ const currentYear  = new Date().getFullYear()
 const tahunOptions = [currentYear, currentYear-1, currentYear-2, currentYear-3]
 const tahunDipilih = ref(currentYear)
 
-/* SVG Chart */
+/* SVG Chart — selalu tampilkan 12 bulan agar visual tetap proporsional */
 const W = 460, H = 180, PL = 52, PR = 16, PT = 14, PB = 26
-const maxVal     = computed(() => Math.max(...bulanan.value.map(b => Number(b.total_pendapatan)), 1))
+
+const fullYearData = computed(() => {
+  const map = {}
+  bulanan.value.forEach(b => { map[b.bulan] = b })
+  return Array.from({ length: 12 }, (_, i) => {
+    const m = String(i + 1).padStart(2, '0')
+    const key = `${tahunDipilih.value}-${m}`
+    return map[key] || { bulan: key, jumlah_pesanan: 0, total_pendapatan: 0 }
+  })
+})
+
+const maxVal     = computed(() => Math.max(...fullYearData.value.map(b => Number(b.total_pendapatan)), 1))
 const maxTerjual = computed(() => Math.max(...topProduk.value.map(p => Number(p.total_terjual)), 1))
 const gridStep   = computed(() => (H - PT - PB) / 4)
 
 const pts = computed(() => {
-  const n = bulanan.value.length
-  if (!n) return []
+  const n = fullYearData.value.length
   const cW = W - PL - PR, cH = H - PT - PB
-  return bulanan.value.map((b, i) => ({
-    x: PL + (n === 1 ? cW / 2 : i * cW / (n - 1)),
+  return fullYearData.value.map((b, i) => ({
+    x: PL + (i * cW) / (n - 1),
     y: PT + cH - (Number(b.total_pendapatan) / maxVal.value) * cH,
+    hasData: Number(b.total_pendapatan) > 0,
   }))
 })
 const linePath = computed(() => pts.value.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ') || '')
