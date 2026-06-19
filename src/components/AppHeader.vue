@@ -34,7 +34,7 @@ const today = new Date().toLocaleDateString('id-ID', {
 })
 
 const pageMeta = {
-  '/dashboard':  { title: 'Dashboard',   desc: 'Ringkasan performa toko hari ini' },
+  '/dashboard':  { title: 'Beranda',   desc: 'Ringkasan performa toko hari ini' },
   '/kategori':   { title: 'Kategori',    desc: 'Kelola kategori produk' },
   '/produk':     { title: 'Produk',      desc: 'Kelola produk & inventaris' },
   '/pelanggan':  { title: 'Pelanggan',   desc: 'Data dan riwayat pelanggan' },
